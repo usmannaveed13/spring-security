@@ -21,10 +21,13 @@ INSERT IGNORE INTO `authorities` VALUES (NULL, 'happy', 'write');
 CREATE TABLE `customer` (
                             `id` int NOT NULL AUTO_INCREMENT,
                             `email` varchar(45) NOT NULL,
-                            `pwd` varchar(45) NOT NULL,
+                            `pwd` varchar(200) NOT NULL,
                             `role` varchar(45) NOT NULL,
                             PRIMARY KEY (`id`)
 );
 
 INSERT INTO `customer` (`email`, `pwd`, `role`)
 VALUES ('johndoe@example.com', '54321', 'admin');
+
+INSERT INTO `customer` (`email`, `pwd`, `role`)
+VALUES ('happy@example.com', '$2y$12$oRRbkNfwuR8ug4MlzH5FOeui.//1mkd.RsOAJMbykTSupVy.x/vb2', 'admin');
