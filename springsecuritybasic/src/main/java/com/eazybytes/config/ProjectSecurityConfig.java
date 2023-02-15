@@ -26,25 +26,50 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
      * /contact - Not Secured
      */
 
-     @Override
-     protected void configure(HttpSecurity http) throws Exception {
-         http.cors().configurationSource(new CorsConfigurationSource() {
-                     @Override
-                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                         CorsConfiguration config = new CorsConfiguration();
-                         config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-                         config.setAllowedMethods(Collections.singletonList("*"));
-                         config.setAllowCredentials(true);
-                         config.setAllowedHeaders(Collections.singletonList("*"));
-                         config.setMaxAge(3600L);
-                         return config;
-                     }
-                 }).and().csrf().ignoringAntMatchers("/contact").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and().
-                 authorizeRequests().antMatchers("/myAccount").authenticated().antMatchers("/myBalance").authenticated()
-                 .antMatchers("/myLoans").authenticated().antMatchers("/myCards").authenticated()
-                 .antMatchers("/user").authenticated().antMatchers("/notices").permitAll()
-                 .antMatchers("/contact").permitAll().and().httpBasic();
-     }
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http.cors().configurationSource(new CorsConfigurationSource() {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration config = new CorsConfiguration();
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                        config.setAllowedMethods(Collections.singletonList("*"));
+                        config.setAllowCredentials(true);
+                        config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setMaxAge(3600L);
+                        return config;
+                    }
+                }).and().csrf().ignoringAntMatchers("/contact").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and().authorizeRequests()
+                .antMatchers("/myAccount").hasRole("USER")
+                .antMatchers("/myBalance").hasAnyRole("USER","ADMIN")
+                .antMatchers("/myLoans").hasRole("ROOT")
+                .antMatchers("/myCards").authenticated()
+                .antMatchers("/user").authenticated()
+                .antMatchers("/notices").permitAll()
+                .antMatchers("/contact").permitAll().and().httpBasic();
+    }
+
+//     @Override
+//     protected void configure(HttpSecurity http) throws Exception {
+//         http.cors().configurationSource(new CorsConfigurationSource() {
+//                     @Override
+//                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+//                         CorsConfiguration config = new CorsConfiguration();
+//                         config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+//                         config.setAllowedMethods(Collections.singletonList("*"));
+//                         config.setAllowCredentials(true);
+//                         config.setAllowedHeaders(Collections.singletonList("*"));
+//                         config.setMaxAge(3600L);
+//                         return config;
+//                     }
+//                 }).and().csrf().ignoringAntMatchers("/contact").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and().
+//                 authorizeRequests().antMatchers("/myAccount").authenticated().antMatchers("/myBalance").authenticated()
+//                 .antMatchers("/myLoans").authenticated().antMatchers("/myCards").authenticated()
+//                 .antMatchers("/user").authenticated().antMatchers("/notices").permitAll()
+//                 .antMatchers("/contact").permitAll().and().httpBasic();
+//     }
 
     /*
      * @Override protected void configure(AuthenticationManagerBuilder auth) throws
